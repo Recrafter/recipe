@@ -1,11 +1,3 @@
-# Recipe
-
-A Gradle settings plugin that preconfigures projects for the Recrafter ecosystem. New recipe unlocked!
-
-[![Github Pages](https://img.shields.io/github/v/tag/Recrafter/recipe.svg?label=Github+Pages&style=for-the-badge&sort=semver)](https://recrafter.github.io/recipe) [![License: MIT](https://img.shields.io/static/v1?label=License&style=for-the-badge&message=MIT&color=yellow)](https://spdx.org/licenses/MIT)
-
----
-
 ## Overview
 
 The Recipe plugin provides a unified way to configure Gradle settings and automatically prepare complex workspaces.  
@@ -26,9 +18,3 @@ plugins {
 
 Once applied, Recipe scans and configures your workspace automatically —
 registering required repositories, including mod subprojects, and setting up consistent project metadata.
-
----
-
-## License
-
-This project is licensed under the [MIT License](https://spdx.org/licenses/MIT).
