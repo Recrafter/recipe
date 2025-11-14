@@ -99,7 +99,7 @@ class ModConfigurator(val configuration: ModConfiguration) : AbstractConfigurato
                 val versionProjectPath = buildGradleProjectPath(loaderDirectoryName, versionProjectDirectoryName)
                 include(versionProjectPath)
 
-                configuration.environment.sides.forEach { side ->
+                configuration.requireEnvironment().sides.forEach { side ->
                     val sideProjectDirectoryName = side.getName()
                     val sideProjectDirectory = versionProjectDirectory.resolve(sideProjectDirectoryName)
                     if (sideProjectDirectory.exists()) {
@@ -114,7 +114,7 @@ class ModConfigurator(val configuration: ModConfiguration) : AbstractConfigurato
     override fun configureRootProject(rootProject: Project) {
         rootProject.setModRecipe(
             ModRecipe(
-                environment = configuration.environment,
+                environment = configuration.requireEnvironment(),
             )
         )
     }
