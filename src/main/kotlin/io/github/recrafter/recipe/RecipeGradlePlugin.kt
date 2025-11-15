@@ -1,6 +1,7 @@
 package io.github.recrafter.recipe
 
 import io.github.diskria.gradle.utils.extensions.registerExtension
+import io.github.diskria.gradle.utils.extensions.saveDependencyResolutionRepositories
 import io.github.recrafter.recipe.extensions.gradle.RecipeExtension
 import io.github.recrafter.recipe.patches.BuildscriptPatches
 import org.gradle.api.Plugin
@@ -15,6 +16,7 @@ class RecipeGradlePlugin : Plugin<Settings> {
         extension.onConfiguratorReady { configurator ->
             configurator.configure(this)
             gradle.rootProject {
+                saveDependencyResolutionRepositories(this)
                 configurator.configureRootProject(this)
             }
         }
