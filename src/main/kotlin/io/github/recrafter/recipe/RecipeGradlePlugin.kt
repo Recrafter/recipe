@@ -14,7 +14,7 @@ class RecipeGradlePlugin : Plugin<Settings> {
 
         val extension = registerExtension<RecipeExtension>()
         extension.onConfiguratorReady { configurator ->
-            configurator.configure(this)
+            configurator.configure(settings)
             gradle.rootProject {
                 saveDependencyResolutionRepositories(this)
                 configurator.configureRootProject(this)

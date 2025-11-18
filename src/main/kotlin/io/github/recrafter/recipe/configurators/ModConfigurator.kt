@@ -2,6 +2,7 @@ package io.github.recrafter.recipe.configurators
 
 import io.github.diskria.gradle.utils.extensions.common.buildGradleProjectPath
 import io.github.diskria.gradle.utils.extensions.rootDirectory
+import io.github.diskria.kotlin.utils.extensions.asDirectoryOrNull
 import io.github.diskria.kotlin.utils.extensions.common.buildUrl
 import io.github.diskria.kotlin.utils.extensions.common.`kebab-case`
 import io.github.diskria.kotlin.utils.extensions.listDirectories
@@ -89,22 +90,19 @@ class ModConfigurator(val configuration: ModConfiguration) : AbstractConfigurato
     }
 
     override fun configureProjects(settings: Settings) = with(settings) {
+        val sides = configuration.requireEnvironment().sides
         ModLoaderType.values().forEach { loader ->
-            val loaderDirectoryName = loader.getName(`kebab-case`)
-            val loaderDirectory = rootDirectory.resolve(loaderDirectoryName)
-            val minecraftVersions = loaderDirectory.listDirectories().map { MinecraftVersion.parse(it.name) }
-            minecraftVersions.forEach { minecraftVersion ->
-                val versionProjectDirectoryName = minecraftVersion.asString()
-                val versionProjectDirectory = loaderDirectory.resolve(versionProjectDirectoryName)
-                val versionProjectPath = buildGradleProjectPath(loaderDirectoryName, versionProjectDirectoryName)
-                include(versionProjectPath)
-
-                configuration.requireEnvironment().sides.forEach { side ->
-                    val sideProjectDirectoryName = side.getName()
-                    val sideProjectDirectory = versionProjectDirectory.resolve(sideProjectDirectoryName)
-                    if (sideProjectDirectory.exists()) {
-                        val sideProjectPath = buildGradleProjectPath(versionProjectPath, sideProjectDirectoryName)
-                        include(sideProjectPath)
+            val loaderName = loader.getName(`kebab-case`)
+            rootDirectory.resolve(loaderName).asDirectoryOrNull()?.let { loaderDirectory ->
+                val versions = loaderDirectory.listDirectories().mapNotNull { MinecraftVersion.parseOrNull(it.name) }
+                versions.forEach { version ->
+                    val versionName = version.asString()
+                    loaderDirectory.resolve(versionName).asDirectoryOrNull()?.let { versionDirectory ->
+                        sides.forEach { side ->
+                            versionDirectory.resolve(side.getName()).asDirectoryOrNull()?.let { sideDirectory ->
+                                include(buildGradleProjectPath(loaderName, versionName, sideDirectory.name))
+                            }
+                        }
                     }
                 }
             }
