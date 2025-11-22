@@ -9,7 +9,7 @@ import org.gradle.api.Project
 import org.gradle.api.initialization.Settings
 import org.gradle.internal.Actions.with
 
-abstract class AbstractConfigurator {
+open class AbstractConfigurator {
 
     fun configure(settings: Settings) {
         applyCommonConfiguration(settings)
@@ -17,11 +17,17 @@ abstract class AbstractConfigurator {
         configureProjects(settings)
     }
 
-    abstract fun configureRootProject(rootProject: Project)
+    open fun configureRootProject(rootProject: Project) {
 
-    protected abstract fun configureRepositories(settings: Settings)
+    }
 
-    protected abstract fun configureProjects(settings: Settings)
+    protected open fun configureRepositories(settings: Settings) {
+
+    }
+
+    protected open fun configureProjects(settings: Settings) {
+
+    }
 
     private fun applyCommonConfiguration(settings: Settings) = with(settings) {
         repositories {

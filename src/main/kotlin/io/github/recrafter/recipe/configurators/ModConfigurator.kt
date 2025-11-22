@@ -3,94 +3,24 @@ package io.github.recrafter.recipe.configurators
 import io.github.diskria.gradle.utils.extensions.common.buildGradleProjectPath
 import io.github.diskria.gradle.utils.extensions.rootDirectory
 import io.github.diskria.kotlin.utils.extensions.asDirectoryOrNull
-import io.github.diskria.kotlin.utils.extensions.common.buildUrl
 import io.github.diskria.kotlin.utils.extensions.common.`kebab-case`
 import io.github.diskria.kotlin.utils.extensions.listDirectories
 import io.github.diskria.kotlin.utils.extensions.mappers.getName
-import io.github.recrafter.bedrock.MinecraftConstants
 import io.github.recrafter.bedrock.extensions.setModRecipe
 import io.github.recrafter.bedrock.loaders.ModLoaderType
 import io.github.recrafter.bedrock.recipes.ModRecipe
+import io.github.recrafter.bedrock.sides.ModEnvironment
 import io.github.recrafter.bedrock.versions.MinecraftVersion
 import io.github.recrafter.bedrock.versions.asString
+import io.github.recrafter.bedrock.versions.isInternalServer
 import io.github.recrafter.recipe.configurations.ModConfiguration
-import io.github.recrafter.recipe.configurators.common.AbstractConfigurator
-import io.github.recrafter.recipe.extensions.configureMaven
-import io.github.recrafter.recipe.extensions.dependencyRepositories
-import io.github.recrafter.recipe.extensions.repositories
-import io.ktor.http.*
 import org.gradle.api.Project
 import org.gradle.api.initialization.Settings
 
-class ModConfigurator(val configuration: ModConfiguration) : AbstractConfigurator() {
-
-    override fun configureRepositories(settings: Settings) = with(settings) {
-        dependencyRepositories {
-            configureMaven(
-                name = MinecraftConstants.FULL_GAME_NAME,
-                url = buildUrl("libraries.minecraft.net")
-            )
-            configureMaven(
-                name = "SpongePowered",
-                url = buildUrl("repo.spongepowered.org") {
-                    path("repository", "maven-public")
-                }
-            )
-            configureMaven(
-                name = "Modrinth",
-                url = buildUrl("api.modrinth.com") {
-                    path("maven")
-                },
-                group = "maven.modrinth",
-                includeSubgroups = false
-            )
-        }
-        repositories {
-            configureMaven(
-                name = "Parchment",
-                url = buildUrl("maven.parchmentmc.org")
-            )
-            configureMaven(
-                name = ModLoaderType.FABRIC.displayName,
-                url = buildUrl("maven.fabricmc.net")
-            )
-            configureMaven(
-                name = ModLoaderType.QUILT.displayName,
-                url = buildUrl("maven.quiltmc.org") {
-                    path("repository", "release")
-                }
-            )
-            configureMaven(
-                name = ModLoaderType.LEGACY_FABRIC.displayName,
-                url = buildUrl("maven.legacyfabric.net")
-            )
-            configureMaven(
-                name = ModLoaderType.ORNITHE.displayName,
-                url = buildUrl("maven.ornithemc.net") {
-                    path("releases")
-                }
-            )
-            configureMaven(
-                name = ModLoaderType.BABRIC.displayName,
-                url = buildUrl("maven.glass-launcher.net") {
-                    path("babric")
-                }
-            )
-            configureMaven(
-                name = ModLoaderType.FORGE.displayName,
-                url = buildUrl("maven.minecraftforge.net")
-            )
-            configureMaven(
-                name = ModLoaderType.NEOFORGE.displayName,
-                url = buildUrl("maven.neoforged.net") {
-                    path("releases")
-                }
-            )
-        }
-    }
+class ModConfigurator(val configuration: ModConfiguration) : MavenReposConfigurator() {
 
     override fun configureProjects(settings: Settings) = with(settings) {
-        val sides = configuration.requireEnvironment().sides
+        val userEnvironment = configuration.requireEnvironment()
         ModLoaderType.values().forEach { loader ->
             val loaderName = loader.getName(`kebab-case`)
             rootDirectory.resolve(loaderName).asDirectoryOrNull()?.let { loaderDirectory ->
@@ -98,7 +28,8 @@ class ModConfigurator(val configuration: ModConfiguration) : AbstractConfigurato
                 versions.forEach { version ->
                     val versionName = version.asString()
                     loaderDirectory.resolve(versionName).asDirectoryOrNull()?.let { versionDirectory ->
-                        sides.forEach { side ->
+                        val environment = if (version.isInternalServer) ModEnvironment.CLIENT_ONLY else userEnvironment
+                        environment.sides.forEach { side ->
                             versionDirectory.resolve(side.getName()).asDirectoryOrNull()?.let { sideDirectory ->
                                 include(buildGradleProjectPath(loaderName, versionName, sideDirectory.name))
                             }

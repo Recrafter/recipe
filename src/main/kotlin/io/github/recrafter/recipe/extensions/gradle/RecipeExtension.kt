@@ -4,6 +4,7 @@ import io.github.diskria.gradle.utils.extensions.common.gradleError
 import io.github.diskria.gradle.utils.extensions.gradle.GradleExtension
 import io.github.recrafter.recipe.configurations.ModConfiguration
 import io.github.recrafter.recipe.configurators.ModConfigurator
+import io.github.recrafter.recipe.configurators.MavenReposConfigurator
 import io.github.recrafter.recipe.configurators.common.AbstractConfigurator
 
 open class RecipeExtension : GradleExtension() {
@@ -13,6 +14,10 @@ open class RecipeExtension : GradleExtension() {
 
     fun mod(configure: ModConfiguration.() -> Unit) {
         setConfigurator(ModConfigurator(ModConfiguration().apply(configure)))
+    }
+
+    fun mavenReposOnly() {
+        setConfigurator(MavenReposConfigurator())
     }
 
     fun onConfiguratorReady(callback: (AbstractConfigurator) -> Unit) {
