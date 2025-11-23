@@ -1,5 +1,4 @@
 import io.github.diskria.gradle.utils.extensions.getCatalogVersion
-import io.github.diskria.gradle.utils.extensions.implementation
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -8,6 +7,7 @@ plugins {
 }
 
 dependencies {
+    implementation(libs.foojay.resolver.plugin)
     implementation(libs.bundles.diskria.utils)
     implementation(libs.bundles.ktor.client)
     implementation(libs.bedrock)

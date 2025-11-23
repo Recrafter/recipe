@@ -7,7 +7,7 @@ import io.github.recrafter.recipe.configurators.common.AbstractConfigurator
 import io.github.recrafter.recipe.extensions.configureMaven
 import io.github.recrafter.recipe.extensions.dependencyRepositories
 import io.github.recrafter.recipe.extensions.repositories
-import io.ktor.http.path
+import io.ktor.http.*
 import org.gradle.api.initialization.Settings
 
 open class MavenReposConfigurator : AbstractConfigurator() {
@@ -24,20 +24,8 @@ open class MavenReposConfigurator : AbstractConfigurator() {
                     path("repository", "maven-public")
                 }
             )
-            configureMaven(
-                name = "Modrinth",
-                url = buildUrl("api.modrinth.com") {
-                    path("maven")
-                },
-                group = "maven.modrinth",
-                includeSubgroups = false
-            )
         }
         repositories {
-            configureMaven(
-                name = "Parchment",
-                url = buildUrl("maven.parchmentmc.org")
-            )
             configureMaven(
                 name = ModLoaderType.FABRIC.displayName,
                 url = buildUrl("maven.fabricmc.net")

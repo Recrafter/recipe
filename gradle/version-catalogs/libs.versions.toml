@@ -1,19 +1,23 @@
 [versions]
 projektor = "4.+"
 
+foojay-resolver-plugin = "1.0.0"
+
 kotlin = "2.0.21"
 ktor = "3.0.0"
 
 kotlin-utils = "0.8.7"
 gradle-utils = "0.8.11"
 
-bedrock = "0.1.8"
+bedrock = "0.1.9"
 
 [plugins]
 projektor = { id = "io.github.diskria.projektor", version.ref = "projektor" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 
 [libraries]
+foojay-resolver-plugin = { group = "org.gradle.toolchains.foojay-resolver-convention", name = "org.gradle.toolchains.foojay-resolver-convention.gradle.plugin", version.ref = "foojay-resolver-plugin" }
+
 kotlin-utils = { group = "io.github.diskria", name = "kotlin-utils", version.ref = "kotlin-utils" }
 gradle-utils = { group = "io.github.diskria", name = "gradle-utils", version.ref = "gradle-utils" }
 
