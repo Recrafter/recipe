@@ -2,9 +2,8 @@ package io.github.recrafter.recipe.extensions.gradle
 
 import io.github.diskria.gradle.utils.extensions.common.gradleError
 import io.github.diskria.gradle.utils.extensions.gradle.GradleExtension
-import io.github.recrafter.recipe.configurations.ModConfiguration
-import io.github.recrafter.recipe.configurators.ModConfigurator
-import io.github.recrafter.recipe.configurators.MavenReposConfigurator
+import io.github.recrafter.recipe.configurations.CrafterConfiguration
+import io.github.recrafter.recipe.configurators.CrafterConfigurator
 import io.github.recrafter.recipe.configurators.common.AbstractConfigurator
 
 open class RecipeExtension : GradleExtension() {
@@ -12,12 +11,8 @@ open class RecipeExtension : GradleExtension() {
     private var configurator: AbstractConfigurator? = null
     private var onConfiguratorReadyCallback: ((AbstractConfigurator) -> Unit)? = null
 
-    fun mod(configure: ModConfiguration.() -> Unit) {
-        setConfigurator(ModConfigurator(ModConfiguration().apply(configure)))
-    }
-
-    fun mavenReposOnly() {
-        setConfigurator(MavenReposConfigurator())
+    fun crafter(configure: CrafterConfiguration.() -> Unit) {
+        setConfigurator(CrafterConfigurator(CrafterConfiguration().apply(configure)))
     }
 
     fun onConfiguratorReady(callback: (AbstractConfigurator) -> Unit) {

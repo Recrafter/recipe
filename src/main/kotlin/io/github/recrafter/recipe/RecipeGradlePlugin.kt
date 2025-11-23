@@ -19,8 +19,7 @@ class RecipeGradlePlugin : Plugin<Settings> {
         extension.onConfiguratorReady { configurator ->
             configurator.configure(settings)
             gradle.rootProject {
-                saveDependencyResolutionRepositories(this)
-                configurator.configureRootProject(this)
+                configurator.configureRootProject(settings, this)
             }
         }
         gradle.settingsEvaluated {

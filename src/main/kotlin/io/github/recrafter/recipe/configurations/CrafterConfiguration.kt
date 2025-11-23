@@ -3,7 +3,9 @@ package io.github.recrafter.recipe.configurations
 import io.github.diskria.gradle.utils.extensions.common.gradleError
 import io.github.recrafter.bedrock.sides.ModEnvironment
 
-open class ModConfiguration {
+open class CrafterConfiguration {
+
+    internal var isCraftingCrafters: Boolean = false
 
     /**
      * The target environment where your mod will run.
@@ -77,6 +79,10 @@ open class ModConfiguration {
      */
     fun dedicatedServerOnly() {
         environment = ModEnvironment.DEDICATED_SERVER_ONLY
+    }
+
+    fun craftingCrafters() {
+        isCraftingCrafters = true
     }
 
     internal fun requireEnvironment(): ModEnvironment =

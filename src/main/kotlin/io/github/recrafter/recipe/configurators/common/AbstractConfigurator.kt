@@ -17,7 +17,7 @@ open class AbstractConfigurator {
         configureProjects(settings)
     }
 
-    open fun configureRootProject(rootProject: Project) {
+    open fun configureRootProject(settings: Settings, rootProject: Project) {
 
     }
 
