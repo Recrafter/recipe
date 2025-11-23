@@ -1,0 +1,148 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "io.github.recrafter",
+    "module": "recipe",
+    "version": "0.1.6",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "8.14.3"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.jvm.version": 21,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "files": [
+        {
+          "name": "recipe-0.1.6.jar",
+          "url": "recipe-0.1.6.jar",
+          "size": 51238,
+          "sha512": "e4adee3bacae409e1b109c7e6301ab8427d8518ea21b4d4a8ed6f3b1ba01e06ef7cd58c43a91781acb985496fbfd40abd4f36a4ef5386a9635144ddf4e9dfa68",
+          "sha256": "592cbb4854ae1245d392dd65468e0f40ded73c87e1cc6f7dfe8ba3f0a4d3eff7",
+          "sha1": "181bb43326756586091dc7b79b0a173ba7fbc59a",
+          "md5": "e25a940258058ac22aca3408b3ce037d"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.jvm.version": 21,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "org.gradle.toolchains.foojay-resolver-convention",
+          "module": "org.gradle.toolchains.foojay-resolver-convention.gradle.plugin",
+          "version": {
+            "requires": "1.0.0"
+          }
+        },
+        {
+          "group": "io.github.diskria",
+          "module": "kotlin-utils",
+          "version": {
+            "requires": "0.8.7"
+          }
+        },
+        {
+          "group": "io.github.diskria",
+          "module": "gradle-utils",
+          "version": {
+            "requires": "0.8.11"
+          }
+        },
+        {
+          "group": "io.ktor",
+          "module": "ktor-client-core",
+          "version": {
+            "requires": "3.0.0"
+          }
+        },
+        {
+          "group": "io.ktor",
+          "module": "ktor-client-cio",
+          "version": {
+            "requires": "3.0.0"
+          }
+        },
+        {
+          "group": "io.github.recrafter",
+          "module": "bedrock",
+          "version": {
+            "requires": "0.1.9"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "recipe-0.1.6.jar",
+          "url": "recipe-0.1.6.jar",
+          "size": 51238,
+          "sha512": "e4adee3bacae409e1b109c7e6301ab8427d8518ea21b4d4a8ed6f3b1ba01e06ef7cd58c43a91781acb985496fbfd40abd4f36a4ef5386a9635144ddf4e9dfa68",
+          "sha256": "592cbb4854ae1245d392dd65468e0f40ded73c87e1cc6f7dfe8ba3f0a4d3eff7",
+          "sha1": "181bb43326756586091dc7b79b0a173ba7fbc59a",
+          "md5": "e25a940258058ac22aca3408b3ce037d"
+        }
+      ]
+    },
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "recipe-0.1.6-sources.jar",
+          "url": "recipe-0.1.6-sources.jar",
+          "size": 8461,
+          "sha512": "bccd4ca74fd46221c1d2cced1e6b80df2befbf128610d5135d26e02340118d48aeb035fa6e75fa57d5318ba35dc14d66a18f34ac2bcc51649f647ccdb5d26d93",
+          "sha256": "7309b20bfe1899e0051a43b109fa2e40d14a078ec1bcfb66230186dff35d253c",
+          "sha1": "a727f5f288bb4498e954df144c7fb28bc3ad6dca",
+          "md5": "fc665d886f3cc1e91e36c414fcd9dddd"
+        }
+      ]
+    },
+    {
+      "name": "javadocElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "javadoc",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "recipe-0.1.6-javadoc.jar",
+          "url": "recipe-0.1.6-javadoc.jar",
+          "size": 261,
+          "sha512": "2c5974bf774046a26e393f7fff02a498dd8e4b39f0553c60fd996a0e20f546609483bcc883798f9732e0336fdd3fffca4aa921f1ccf4b1fd3b84efbeae082a0b",
+          "sha256": "540156995908d92e80c35731f27ec6bafb0559292c3269f3abdd9970a3c60cd3",
+          "sha1": "98f66cd1aa2d80d0251bc756e5b364c7150a29b7",
+          "md5": "2d2f60fb998ca919f31ac27b2c392909"
+        }
+      ]
+    }
+  ]
+}
