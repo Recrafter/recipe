@@ -1,7 +1,6 @@
 package io.github.recrafter.recipe.configurators
 
 import io.github.diskria.gradle.utils.extensions.common.buildGradleProjectPath
-import io.github.diskria.gradle.utils.extensions.common.gradleError
 import io.github.diskria.gradle.utils.extensions.rootDirectory
 import io.github.diskria.gradle.utils.extensions.saveDependencyResolutionRepositories
 import io.github.diskria.kotlin.utils.extensions.asDirectoryOrNull
@@ -9,7 +8,6 @@ import io.github.diskria.kotlin.utils.extensions.common.buildUrl
 import io.github.diskria.kotlin.utils.extensions.common.`kebab-case`
 import io.github.diskria.kotlin.utils.extensions.listDirectories
 import io.github.diskria.kotlin.utils.extensions.mappers.getName
-import io.github.diskria.kotlin.utils.extensions.splitToPairOrNull
 import io.github.diskria.kotlin.utils.extensions.toBooleanOrNull
 import io.github.recrafter.bedrock.MinecraftConstants
 import io.github.recrafter.bedrock.extensions.setModRecipe
@@ -18,7 +16,6 @@ import io.github.recrafter.bedrock.recipes.ModRecipe
 import io.github.recrafter.bedrock.sides.ModSide
 import io.github.recrafter.bedrock.versions.MinecraftVersion
 import io.github.recrafter.bedrock.versions.MinecraftVersionRange
-import io.github.recrafter.bedrock.versions.asString
 import io.github.recrafter.bedrock.versions.isInternalServer
 import io.github.recrafter.recipe.configurations.CrafterConfiguration
 import io.github.recrafter.recipe.configurators.common.AbstractConfigurator
@@ -90,28 +87,29 @@ class CrafterConfigurator(val configuration: CrafterConfiguration) : AbstractCon
             return@with
         }
         if (System.getProperty("drift")?.toBooleanOrNull() == true) {
-            println("[Crafter] Running in drift mode")
             val loaderName = System.getProperty("loader")
-            val isFuture = System.getProperty("future").toBoolean()
             val projects = rootDirectory.resolve(loaderName).listDirectories().mapNotNull {
-                val (min, max) = it.name.splitToPairOrNull("--") ?: return@mapNotNull null
-                if (isFuture && max != "drift" || !isFuture && min != "drift") {
+                val suffix = "--drift"
+                if (!it.name.endsWith(suffix)) {
                     return@mapNotNull null
                 }
-                val versionString = if (isFuture) min else max
+                val versionString = it.name.removeSuffix(suffix)
                 val version = MinecraftVersion.parseOrNull(versionString) ?: return@mapNotNull null
                 it to version
             }
-            val (projectDirectory, version) = projects.singleOrNull()
-                ?: gradleError("Only single directory for drifting possible per loader")
-            println("[Crafter] Detected version for drift: ${version.asString()}")
+            val (projectDirectory, version) = projects.single()
             includeSideProjects(settings, loaderName, projectDirectory, version)
             return@with
         }
         ModLoaderType.values().forEach { loader ->
             val loaderName = loader.getName(`kebab-case`)
             rootDirectory.resolve(loaderName).asDirectoryOrNull()?.let { loaderDirectory ->
-                val ranges = loaderDirectory.listDirectories().map { it.name to MinecraftVersionRange.parse(it.name) }
+                val ranges = loaderDirectory.listDirectories().mapNotNull {
+                    if (it.name.endsWith("drift")) {
+                        return@mapNotNull null
+                    }
+                    it.name to MinecraftVersionRange.parse(it.name)
+                }
                 ranges.forEach { (rangeDirectoryName, range) ->
                     loaderDirectory.resolve(rangeDirectoryName).asDirectoryOrNull()?.let { rangeDirectory ->
                         includeSideProjects(settings, loaderName, rangeDirectory, range.min)

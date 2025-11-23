@@ -89,7 +89,7 @@ open class CrafterConfiguration {
         environment ?: gradleError(
             """
             Mod environment not set.
-            Please specify it inside recipe.mod { ... } using one of:
+            Please specify it inside recipe.crafter { ... } using one of:
               - clientAndServer()
               - clientOnly()
               - serverOnly()
