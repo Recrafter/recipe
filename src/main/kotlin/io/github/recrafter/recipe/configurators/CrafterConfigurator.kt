@@ -1,6 +1,7 @@
 package io.github.recrafter.recipe.configurators
 
 import io.github.diskria.gradle.utils.extensions.common.buildGradleProjectPath
+import io.github.diskria.gradle.utils.extensions.common.gradleError
 import io.github.diskria.gradle.utils.extensions.rootDirectory
 import io.github.diskria.gradle.utils.extensions.saveDependencyResolutionRepositories
 import io.github.diskria.kotlin.utils.extensions.asDirectoryOrNull
@@ -8,7 +9,10 @@ import io.github.diskria.kotlin.utils.extensions.common.buildUrl
 import io.github.diskria.kotlin.utils.extensions.common.`kebab-case`
 import io.github.diskria.kotlin.utils.extensions.listDirectories
 import io.github.diskria.kotlin.utils.extensions.mappers.getName
+import io.github.diskria.kotlin.utils.extensions.mappers.toEnum
+import io.github.diskria.kotlin.utils.extensions.splitToPairOrNull
 import io.github.diskria.kotlin.utils.extensions.toBooleanOrNull
+import io.github.diskria.kotlin.utils.properties.autoNamedProperty
 import io.github.recrafter.bedrock.MinecraftConstants
 import io.github.recrafter.bedrock.extensions.setModRecipe
 import io.github.recrafter.bedrock.loaders.ModLoaderType
@@ -25,6 +29,7 @@ import io.github.recrafter.recipe.extensions.repositories
 import io.ktor.http.*
 import org.gradle.api.Project
 import org.gradle.api.initialization.Settings
+import org.gradle.internal.extensions.core.extra
 import java.io.File
 
 class CrafterConfigurator(val configuration: CrafterConfiguration) : AbstractConfigurator() {
@@ -58,15 +63,15 @@ class CrafterConfigurator(val configuration: CrafterConfiguration) : AbstractCon
                 url = buildUrl("maven.legacyfabric.net")
             )
             configureMaven(
-                name = ModLoaderType.ORNITHE.displayName,
-                url = buildUrl("maven.ornithemc.net") {
-                    path("releases")
-                }
-            )
-            configureMaven(
                 name = ModLoaderType.BABRIC.displayName,
                 url = buildUrl("maven.glass-launcher.net") {
                     path("babric")
+                }
+            )
+            configureMaven(
+                name = ModLoaderType.ORNITHE.displayName,
+                url = buildUrl("maven.ornithemc.net") {
+                    path("releases")
                 }
             )
             configureMaven(
@@ -86,35 +91,39 @@ class CrafterConfigurator(val configuration: CrafterConfiguration) : AbstractCon
         if (configuration.isCraftingCrafters) {
             return@with
         }
-        if (System.getProperty("drift")?.toBooleanOrNull() == true) {
-            val loaderName = System.getProperty("loader")
-            val projects = rootDirectory.resolve(loaderName).listDirectories().mapNotNull {
-                val suffix = "--drift"
-                if (!it.name.endsWith(suffix)) {
-                    return@mapNotNull null
+        val isBisectFlowRunning = System.getProperty(BISECT_FLOW_FLAG)?.toBooleanOrNull() == true
+        if (isBisectFlowRunning) {
+            val loader = System.getProperty("loader").toEnum<ModLoaderType>(`kebab-case`)
+            val direction = System.getProperty("direction").toEnum<BisectDirection>()
+            val pendingDirectories = getModDirectories(loader, isBisect = true).mapNotNull { modDirectory ->
+                val targetVersionName = when (direction) {
+                    BisectDirection.FUTURE -> modDirectory.name.substringBefore(PROJECT_NAME_SEPARATOR)
+                    BisectDirection.PAST -> modDirectory.name.substringAfter(PROJECT_NAME_SEPARATOR)
                 }
-                val versionString = it.name.removeSuffix(suffix)
-                val version = MinecraftVersion.parseOrNull(versionString) ?: return@mapNotNull null
-                it to version
+                val targetVersion = MinecraftVersion.parseOrNull(targetVersionName) ?: return@mapNotNull null
+                modDirectory to targetVersion
             }
-            val (projectDirectory, version) = projects.single()
-            includeSideProjects(settings, loaderName, projectDirectory, version)
-            return@with
-        }
-        ModLoaderType.values().forEach { loader ->
-            val loaderName = loader.getName(`kebab-case`)
-            rootDirectory.resolve(loaderName).asDirectoryOrNull()?.let { loaderDirectory ->
-                val ranges = loaderDirectory.listDirectories().mapNotNull {
-                    if (it.name.endsWith("drift")) {
-                        return@mapNotNull null
+            val (modDirectory, targetVersion) = pendingDirectories.singleOrNull()
+                ?: gradleError(
+                    "Only one pending bisect directory is allowed per loader and direction, " +
+                            "but found: ${pendingDirectories.joinToString { it.first.name }}"
+                )
+            gradle.rootProject {
+                val bisectTarget by targetVersion.autoNamedProperty()
+                extra[bisectTarget.name] = bisectTarget.value
+            }
+            includeModProject(settings, loader, modDirectory, targetVersion)
+        } else {
+            ModLoaderType.values().forEach { loader ->
+                getModDirectories(loader)
+                    .mapNotNull { modDirectory ->
+                        val versionRange = MinecraftVersionRange.parseOrNull(modDirectory.name, PROJECT_NAME_SEPARATOR)
+                            ?: return@mapNotNull null
+                        modDirectory to versionRange
                     }
-                    it.name to MinecraftVersionRange.parse(it.name)
-                }
-                ranges.forEach { (rangeDirectoryName, range) ->
-                    loaderDirectory.resolve(rangeDirectoryName).asDirectoryOrNull()?.let { rangeDirectory ->
-                        includeSideProjects(settings, loaderName, rangeDirectory, range.min)
+                    .forEach { (modDirectory, range) ->
+                        includeModProject(settings, loader, modDirectory, range.min)
                     }
-                }
             }
         }
     }
@@ -131,18 +140,44 @@ class CrafterConfigurator(val configuration: CrafterConfiguration) : AbstractCon
         )
     }
 
-    private fun includeSideProjects(
+    private fun includeModProject(
         settings: Settings,
-        loaderName: String,
-        versionDirectory: File,
+        loader: ModLoaderType,
+        modDirectory: File,
         version: MinecraftVersion,
     ) = with(settings) {
-        val userEnvironment = configuration.requireEnvironment()
-        val sides = if (version.isInternalServer) listOf(ModSide.CLIENT) else userEnvironment.sides
+        val sides = when {
+            version.isInternalServer -> listOf(ModSide.CLIENT)
+            else -> configuration.requireEnvironment().sides
+        }
         sides.forEach { side ->
-            versionDirectory.resolve(side.getName()).asDirectoryOrNull()?.let { sideDirectory ->
-                include(buildGradleProjectPath(loaderName, versionDirectory.name, sideDirectory.name))
+            modDirectory.resolve(side.getName()).asDirectoryOrNull()?.let { sideDirectory ->
+                include(buildGradleProjectPath(loader.getName(`kebab-case`), modDirectory.name, sideDirectory.name))
             }
+        }
+    }
+
+    private fun Settings.getModDirectories(loader: ModLoaderType, isBisect: Boolean = false): List<File> =
+        rootDirectory
+            .resolve(loader.getName(`kebab-case`))
+            .asDirectoryOrNull()
+            ?.listDirectories()
+            ?.filter {
+                val isBisectDirectory = it.name
+                    .splitToPairOrNull(PROJECT_NAME_SEPARATOR)
+                    ?.toList()
+                    ?.contains(BISECT_FLOW_FLAG) == true
+                if (isBisect) isBisectDirectory
+                else !isBisectDirectory
+            }
+            .orEmpty()
+
+    companion object {
+        private const val PROJECT_NAME_SEPARATOR: String = "--"
+        private const val BISECT_FLOW_FLAG = "bisect"
+
+        private enum class BisectDirection {
+            PAST, FUTURE;
         }
     }
 }
