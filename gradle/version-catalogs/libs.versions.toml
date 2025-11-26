@@ -7,7 +7,7 @@ kotlin = "2.0.21"
 ktor = "3.0.0"
 
 kotlin-utils = "0.8.9"
-gradle-utils = "0.8.11"
+gradle-utils = "0.8.14"
 
 bedrock = "0.2.2"
 

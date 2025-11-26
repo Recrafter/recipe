@@ -1,7 +1,7 @@
 package io.github.recrafter.recipe.configurators
 
-import io.github.diskria.gradle.utils.extensions.common.buildGradleProjectPath
 import io.github.diskria.gradle.utils.extensions.common.gradleError
+import io.github.diskria.gradle.utils.extensions.common.gradleProjectPath
 import io.github.diskria.gradle.utils.extensions.rootDirectory
 import io.github.diskria.gradle.utils.extensions.saveDependencyResolutionRepositories
 import io.github.diskria.kotlin.utils.extensions.asDirectoryOrNull
@@ -152,7 +152,7 @@ class CrafterConfigurator(val configuration: CrafterConfiguration) : AbstractCon
         }
         sides.forEach { side ->
             modDirectory.resolve(side.getName()).asDirectoryOrNull()?.let { sideDirectory ->
-                include(buildGradleProjectPath(loader.getName(`kebab-case`), modDirectory.name, sideDirectory.name))
+                include(gradleProjectPath(loader.getName(`kebab-case`), modDirectory.name, sideDirectory.name))
             }
         }
     }
