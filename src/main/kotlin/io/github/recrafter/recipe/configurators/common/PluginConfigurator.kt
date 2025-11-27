@@ -9,7 +9,7 @@ import org.gradle.api.Project
 import org.gradle.api.initialization.Settings
 import org.gradle.internal.Actions.with
 
-open class AbstractConfigurator {
+open class PluginConfigurator {
 
     fun configure(settings: Settings) {
         applyCommonConfiguration(settings)
