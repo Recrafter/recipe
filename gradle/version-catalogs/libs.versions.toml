@@ -6,10 +6,10 @@ foojay-resolver-plugin = "1.0.0"
 kotlin = "2.0.21"
 ktor = "3.0.0"
 
-kotlin-utils = "0.8.9"
-gradle-utils = "0.8.14"
+kotlin-utils = "0.9.0"
+gradle-utils = "0.9.0"
 
-bedrock = "0.2.5"
+bedrock = "0.2.6"
 
 [plugins]
 projektor = { id = "io.github.diskria.projektor", version.ref = "projektor" }
