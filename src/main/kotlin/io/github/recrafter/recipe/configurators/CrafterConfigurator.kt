@@ -1,6 +1,7 @@
 package io.github.recrafter.recipe.configurators
 
 import io.github.diskria.gradle.utils.extensions.common.gradleProjectPath
+import io.github.diskria.gradle.utils.extensions.common.requireGradle
 import io.github.diskria.gradle.utils.extensions.rootDirectory
 import io.github.diskria.gradle.utils.extensions.saveDependencyResolutionRepositories
 import io.github.diskria.kotlin.utils.extensions.asDirectory
@@ -9,11 +10,13 @@ import io.github.diskria.kotlin.utils.extensions.common.buildUrl
 import io.github.diskria.kotlin.utils.extensions.common.`kebab-case`
 import io.github.diskria.kotlin.utils.extensions.listDirectories
 import io.github.diskria.kotlin.utils.extensions.mappers.getName
+import io.github.diskria.kotlin.utils.extensions.wrapWithSingleQuote
 import io.github.recrafter.bedrock.MinecraftConstants
 import io.github.recrafter.bedrock.crafter.CrafterFlow
 import io.github.recrafter.bedrock.extensions.setModRecipe
 import io.github.recrafter.bedrock.loaders.ModLoaderType
 import io.github.recrafter.bedrock.recipes.ModRecipe
+import io.github.recrafter.bedrock.versions.MinecraftVersion
 import io.github.recrafter.bedrock.versions.MinecraftVersionRange
 import io.github.recrafter.recipe.configurations.CrafterConfiguration
 import io.github.recrafter.recipe.configurators.common.PluginConfigurator
@@ -87,19 +90,28 @@ class CrafterConfigurator(val configuration: CrafterConfiguration) : PluginConfi
         when (val flow = CrafterFlow.detect()) {
             is CrafterFlow.Normal -> {
                 ModLoaderType.values().forEach { loader ->
-                    rootDirectory
+                    val loaderDirectory = rootDirectory
                         .resolve(loader.getName(`kebab-case`))
                         .asDirectoryOrNull()
-                        ?.listDirectories()
-                        .orEmpty()
-                        .mapNotNull { modDirectory ->
-                            val versionRange = MinecraftVersionRange
-                                .parseOrNull(modDirectory.name, RANGE_SEPARATOR) ?: return@mapNotNull null
-                            modDirectory to versionRange
+                        ?: return@forEach
+                    val ranges = loaderDirectory.listDirectories().mapNotNull { modDirectory ->
+                        val range = MinecraftVersionRange.parseOrNull(
+                            modDirectory.name,
+                            MinecraftVersionRange.MOD_PROJECT_NAME_SEPARATOR
+                        ) ?: return@mapNotNull null
+                        modDirectory to range
+                    }
+                    val allSupportedVersions = mutableSetOf<MinecraftVersion>()
+                    ranges.forEach { (modDirectory, range) ->
+                        val supportedVersions = range.expand()
+                        requireGradle(supportedVersions.none { it in allSupportedVersions }) {
+                            val modProjectPath = gradleProjectPath(loaderDirectory.name, modDirectory.name)
+                            "Invalid mod project ${modProjectPath.wrapWithSingleQuote()}: " +
+                                    "its Minecraft version range overlaps with another mod."
                         }
-                        .forEach { (modDirectory, _) ->
-                            includeModProject(settings, loader, modDirectory)
-                        }
+                        includeModProject(settings, loader, modDirectory)
+                        allSupportedVersions.addAll(supportedVersions)
+                    }
                 }
             }
 
@@ -132,9 +144,5 @@ class CrafterConfigurator(val configuration: CrafterConfiguration) : PluginConfi
                 include(gradleProjectPath(loader.getName(`kebab-case`), modDirectory.name, sideDirectory.name))
             }
         }
-    }
-
-    companion object {
-        private const val RANGE_SEPARATOR: String = "--"
     }
 }
