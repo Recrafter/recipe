@@ -18,6 +18,7 @@ import io.github.recrafter.bedrock.loaders.ModLoaderType
 import io.github.recrafter.bedrock.recipes.ModRecipe
 import io.github.recrafter.bedrock.versions.MinecraftVersion
 import io.github.recrafter.bedrock.versions.MinecraftVersionRange
+import io.github.recrafter.bedrock.versions.asString
 import io.github.recrafter.recipe.configurations.CrafterConfiguration
 import io.github.recrafter.recipe.configurators.common.PluginConfigurator
 import io.github.recrafter.recipe.extensions.configureMaven
@@ -97,17 +98,33 @@ class CrafterConfigurator(val configuration: CrafterConfiguration) : PluginConfi
                     val ranges = loaderDirectory.listDirectories().mapNotNull { modDirectory ->
                         val range = MinecraftVersionRange.parseOrNull(
                             modDirectory.name,
-                            MinecraftVersionRange.MOD_PROJECT_NAME_SEPARATOR
-                        ) ?: return@mapNotNull null
+                            MinecraftVersionRange.PROJECT_NAME_SEPARATOR
+                        )
+                        if (range == null) {
+                            val modProjectPath = gradleProjectPath(loaderDirectory.name, modDirectory.name)
+                            println(
+                                "Skipping mod project ${modProjectPath.wrapWithSingleQuote()}: " +
+                                        "invalid Minecraft version range."
+                            )
+                            return@mapNotNull null
+                        }
                         modDirectory to range
                     }
                     val allSupportedVersions = mutableSetOf<MinecraftVersion>()
                     ranges.forEach { (modDirectory, range) ->
                         val supportedVersions = range.expand()
-                        requireGradle(supportedVersions.none { it in allSupportedVersions }) {
+                        val overlappingVersions = supportedVersions.intersect(allSupportedVersions)
+                        requireGradle(overlappingVersions.isEmpty()) {
                             val modProjectPath = gradleProjectPath(loaderDirectory.name, modDirectory.name)
-                            "Invalid mod project ${modProjectPath.wrapWithSingleQuote()}: " +
-                                    "its Minecraft version range overlaps with another mod."
+                            buildString {
+                                appendLine(
+                                    "Mod project ${modProjectPath.wrapWithSingleQuote()} targets Minecraft versions " +
+                                            "${range.asString()}, which overlap with another mod's range."
+                                )
+                                appendLine(
+                                    "Overlapping versions: ${overlappingVersions.joinToString { it.asString() }}."
+                                )
+                            }
                         }
                         includeModProject(settings, loader, modDirectory)
                         allSupportedVersions.addAll(supportedVersions)
