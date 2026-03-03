@@ -43,6 +43,12 @@ class CrafterConfigurator(val configuration: CrafterConfiguration) : PluginConfi
                     path("repository", "maven-public")
                 }
             )
+            configureMaven(
+                name = "SpongePowered-Legacy",
+                url = buildUrl("repo.spongepowered.org") {
+                    path("maven")
+                }
+            )
         }
         repositories {
             configureMaven(
@@ -63,6 +69,12 @@ class CrafterConfigurator(val configuration: CrafterConfiguration) : PluginConfi
                 name = ModLoaderType.BABRIC.displayName,
                 url = buildUrl("maven.glass-launcher.net") {
                     path("babric")
+                }
+            )
+            configureMaven(
+                name = ModLoaderType.BABRIC.displayName + "-Glass",
+                url = buildUrl("maven.glass-launcher.net") {
+                    path("releases")
                 }
             )
             configureMaven(
@@ -104,7 +116,7 @@ class CrafterConfigurator(val configuration: CrafterConfiguration) : PluginConfi
                             val modProjectPath = gradleProjectPath(loaderDirectory.name, modDirectory.name)
                             println(
                                 "Skipping mod project ${modProjectPath.wrapWithSingleQuote()}: " +
-                                        "invalid Minecraft version range."
+                                    "invalid Minecraft version range."
                             )
                             return@mapNotNull null
                         }
@@ -119,7 +131,7 @@ class CrafterConfigurator(val configuration: CrafterConfiguration) : PluginConfi
                             buildString {
                                 appendLine(
                                     "Mod project ${modProjectPath.wrapWithSingleQuote()} targets Minecraft versions " +
-                                            "${range.asString()}, which overlap with another mod's range."
+                                        "${range.asString()}, which overlap with another mod's range."
                                 )
                                 appendLine(
                                     "Overlapping versions: ${overlappingVersions.joinToString { it.asString() }}."
