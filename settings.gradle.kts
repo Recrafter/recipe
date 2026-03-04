@@ -11,11 +11,11 @@ pluginManagement {
 }
 
 plugins {
-    id("io.github.diskria.projektor.settings") version "4.+"
+    id("io.github.diskria.projektor.settings") version "5.+"
 }
 
 projekt {
-    version = "1.0.5"
+    version = "1.0.6"
     license = MIT
     publish = setOf(
         GITHUB_PAGES,
