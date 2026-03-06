@@ -3,7 +3,7 @@
   "component": {
     "group": "io.github.recrafter",
     "module": "recipe",
-    "version": "1.0.6",
+    "version": "1.2.0",
     "attributes": {
       "org.gradle.status": "release"
     }
@@ -27,13 +27,13 @@
       },
       "files": [
         {
-          "name": "recipe-1.0.6.jar",
-          "url": "recipe-1.0.6.jar",
-          "size": 35486,
-          "sha512": "e506d89b9f8ebd84eeb34624101338cdc01cd7ea44428bef80ec98c8909a527e8ae16d20a1e8dbd438e571fbbfcf81c9c9757cfc3d2ea99a8f1888d74fc87e10",
-          "sha256": "67a0a2f0ffd06652c107bc2ed6eb4d3b96ad363c34a6d3e9e3232f80fbd03f0e",
-          "sha1": "936d22442c904396b3eb623a2096ab7fde9242ef",
-          "md5": "8360c99ed2773443e897bef8867caaff"
+          "name": "recipe-1.2.0.jar",
+          "url": "recipe-1.2.0.jar",
+          "size": 35484,
+          "sha512": "a7d61f8aaa388e6825bf6121f6fe32804b37910112efa2cb148084bda183a78ee114a19b9020a4f814947873370d234b9143373307c47523fa83f6e6744490bd",
+          "sha256": "6f96c4bdc332f95199fb66b2051adcaad088e531e4a3c72d355fb8b197f9312d",
+          "sha1": "d0e31f41effbeed2173715e8e494f41a00022eac",
+          "md5": "0c5576892efaa471a94c56dc27e6ca9c"
         }
       ]
     },
@@ -88,19 +88,19 @@
           "group": "io.github.recrafter",
           "module": "bedrock",
           "version": {
-            "requires": "1.0.3"
+            "requires": "1.0.4"
           }
         }
       ],
       "files": [
         {
-          "name": "recipe-1.0.6.jar",
-          "url": "recipe-1.0.6.jar",
-          "size": 35486,
-          "sha512": "e506d89b9f8ebd84eeb34624101338cdc01cd7ea44428bef80ec98c8909a527e8ae16d20a1e8dbd438e571fbbfcf81c9c9757cfc3d2ea99a8f1888d74fc87e10",
-          "sha256": "67a0a2f0ffd06652c107bc2ed6eb4d3b96ad363c34a6d3e9e3232f80fbd03f0e",
-          "sha1": "936d22442c904396b3eb623a2096ab7fde9242ef",
-          "md5": "8360c99ed2773443e897bef8867caaff"
+          "name": "recipe-1.2.0.jar",
+          "url": "recipe-1.2.0.jar",
+          "size": 35484,
+          "sha512": "a7d61f8aaa388e6825bf6121f6fe32804b37910112efa2cb148084bda183a78ee114a19b9020a4f814947873370d234b9143373307c47523fa83f6e6744490bd",
+          "sha256": "6f96c4bdc332f95199fb66b2051adcaad088e531e4a3c72d355fb8b197f9312d",
+          "sha1": "d0e31f41effbeed2173715e8e494f41a00022eac",
+          "md5": "0c5576892efaa471a94c56dc27e6ca9c"
         }
       ]
     },
@@ -114,13 +114,13 @@
       },
       "files": [
         {
-          "name": "recipe-1.0.6-sources.jar",
-          "url": "recipe-1.0.6-sources.jar",
-          "size": 8650,
-          "sha512": "1e8237712c62ae2756764178d7744d83dfb7714538eb57aa938528ee802817c7e9d2ae919e5e0921920d5f8b46b57f763df341c918e4ed40aa34781a7ed35b40",
-          "sha256": "35d6c983dde0bbd48729b4997975085d67180d0f0cfc81ddcd60882c218bbc7b",
-          "sha1": "a11378175d65882f0c40caef113ce5126772a917",
-          "md5": "a5edb43a89ce58e2a6f467e83f25e9ba"
+          "name": "recipe-1.2.0-sources.jar",
+          "url": "recipe-1.2.0-sources.jar",
+          "size": 8649,
+          "sha512": "098b4e0128dda6c7d5714311cdfa5b23240da54729031d7bda5091c6d5afcadc72a98fbfd4e38e7dc577fc7117a28ea96161d65b6539164321dddbc7452e79bd",
+          "sha256": "9422d416982d5c46b436eb34156c93d4221e42e0fded7a6dc073c5055b4df2b7",
+          "sha1": "5bd607dd8e4ec5561e80d4dd8cc303d22d933fa2",
+          "md5": "157e409abbe130be84e7554d16cff9a9"
         }
       ]
     },
@@ -134,8 +134,8 @@
       },
       "files": [
         {
-          "name": "recipe-1.0.6-javadoc.jar",
-          "url": "recipe-1.0.6-javadoc.jar",
+          "name": "recipe-1.2.0-javadoc.jar",
+          "url": "recipe-1.2.0-javadoc.jar",
           "size": 261,
           "sha512": "1487e5a20c9e4d74f298e07c42e96a61be11b7a768c3fbc199ee138cd68e1fc2267d1cfe3f11f288acc05df755315344d052cc5f6f751f126ab4fe1caa5125ea",
           "sha256": "c6deada2fac53b8ea6523dbda77597b128006674616f140f04df23264c6d1aa3",
