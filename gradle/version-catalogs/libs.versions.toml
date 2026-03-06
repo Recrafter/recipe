@@ -9,7 +9,7 @@ ktor = "3.4.0"
 kotlin-utils = "0.10.1"
 gradle-utils = "0.10.1"
 
-bedrock = "1.0.3"
+bedrock = "1.0.4"
 
 [plugins]
 projektor = { id = "io.github.diskria.projektor", version.ref = "projektor" }
