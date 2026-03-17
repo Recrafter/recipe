@@ -102,7 +102,7 @@ class CrafterConfigurator(val configuration: CrafterConfiguration) : PluginConfi
         }
         when (val flow = CrafterFlow.detect()) {
             is CrafterFlow.Normal -> {
-                ModLoaderType.values().forEach { loader ->
+                ModLoaderType.entries.forEach { loader ->
                     val loaderDirectory = rootDirectory
                         .resolve(loader.getName(`kebab-case`))
                         .asDirectoryOrNull()

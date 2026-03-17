@@ -4,7 +4,6 @@ import io.ktor.http.*
 import org.gradle.api.artifacts.dsl.RepositoryHandler
 import org.gradle.api.artifacts.repositories.MavenArtifactRepository
 import org.gradle.kotlin.dsl.maven
-import kotlin.also
 
 @Suppress("UnstableApiUsage")
 fun RepositoryHandler.configureMaven(
