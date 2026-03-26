@@ -1,5 +1,5 @@
 import io.github.diskria.projektor.common.licenses.LicenseType.MIT
-import io.github.diskria.projektor.common.publishing.PublishingTargetType.GRADLE_PLUGIN_PORTAL
+import io.github.diskria.projektor.common.publishing.PublishingTargetType.GITHUB_PAGES
 
 pluginManagement {
     repositories {
@@ -17,7 +17,7 @@ plugins {
 projekt {
     version = "1.2.2"
     license = MIT
-    publish = setOf(GRADLE_PLUGIN_PORTAL)
+    publish = setOf(GITHUB_PAGES)
 
     gradlePlugin()
 }
