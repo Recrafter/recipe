@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.github.recrafter.recipe</groupId>
   <artifactId>io.github.recrafter.recipe.gradle.plugin</artifactId>
-  <version>1.2.1</version>
+  <version>1.2.2</version>
   <packaging>pom</packaging>
   <name>Recipe</name>
   <description>A Gradle settings plugin that preconfigures projects for the Recrafter ecosystem. New recipe unlocked!</description>
@@ -11,7 +11,7 @@
     <dependency>
       <groupId>io.github.recrafter</groupId>
       <artifactId>recipe</artifactId>
-      <version>1.2.1</version>
+      <version>1.2.2</version>
     </dependency>
   </dependencies>
 </project>
