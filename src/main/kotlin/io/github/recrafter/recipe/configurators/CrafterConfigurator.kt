@@ -97,7 +97,7 @@ class CrafterConfigurator(val configuration: CrafterConfiguration) : PluginConfi
     }
 
     override fun configureProjects(settings: Settings) = with(settings) {
-        if (configuration.isCraftingCrafters) {
+        if (configuration.isMavensOnly) {
             return@with
         }
         when (val flow = CrafterFlow.detect()) {
@@ -155,7 +155,7 @@ class CrafterConfigurator(val configuration: CrafterConfiguration) : PluginConfi
     }
 
     override fun configureRootProject(settings: Settings, rootProject: Project) = with(rootProject) {
-        if (configuration.isCraftingCrafters) {
+        if (configuration.isMavensOnly) {
             return
         }
         settings.saveDependencyResolutionRepositories(this)

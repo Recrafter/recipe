@@ -5,7 +5,7 @@ import io.github.recrafter.bedrock.sides.ModEnvironment
 
 open class CrafterConfiguration {
 
-    internal var isCraftingCrafters: Boolean = false
+    internal var isMavensOnly: Boolean = false
 
     /**
      * The target environment where your mod will run.
@@ -81,8 +81,8 @@ open class CrafterConfiguration {
         environment = ModEnvironment.DEDICATED_SERVER_ONLY
     }
 
-    fun craftingCrafters() {
-        isCraftingCrafters = true
+    fun mavensOnly() {
+        isMavensOnly = true
     }
 
     internal fun requireEnvironment(): ModEnvironment =
