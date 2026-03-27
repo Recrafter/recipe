@@ -2,7 +2,7 @@
 
 A Gradle settings plugin that preconfigures projects for the Recrafter ecosystem. New recipe unlocked!
 
-[![License: MIT](https://img.shields.io/static/v1?label=License&style=for-the-badge&message=MIT&color=yellow)](https://spdx.org/licenses/MIT)
+[![Gradle Plugin Portal](https://img.shields.io/gradle-plugin-portal/v/io.github.recrafter.recipe.svg?label=Gradle+Plugin+Portal&style=for-the-badge)](https://plugins.gradle.org/plugin/io.github.recrafter.recipe) [![License: MIT](https://img.shields.io/static/v1?label=License&style=for-the-badge&message=MIT&color=yellow)](https://spdx.org/licenses/MIT)
 
 ---
 
