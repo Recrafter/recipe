@@ -15,5 +15,6 @@ dependencies {
 projekt {
     gradlePlugin {
         jvmTarget = JvmTarget.JVM_21
+        supportsConfigurationCache = false
     }
 }
