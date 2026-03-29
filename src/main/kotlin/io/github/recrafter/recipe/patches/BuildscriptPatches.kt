@@ -1,9 +1,6 @@
 package io.github.recrafter.recipe.patches
 
 import org.gradle.api.initialization.Settings
-import org.gradle.kotlin.dsl.ScriptHandlerScope
-import org.gradle.kotlin.dsl.buildscript
-import org.gradle.kotlin.dsl.repositories
 
 object BuildscriptPatches {
 
@@ -15,20 +12,12 @@ object BuildscriptPatches {
      * See: https://github.com/orgs/FabricMC/discussions/3546#discussioncomment-8345643
      */
     fun patchLoomGsonCompatibility(settings: Settings) {
-        patch(settings) {
-            repositories {
+        settings.gradle.beforeProject {
+            buildscript.repositories.apply {
                 mavenCentral()
             }
-            dependencies {
-                classpath("com.google.code.gson:gson:2.13.2")
-            }
-        }
-    }
-
-    private fun patch(settings: Settings, configure: ScriptHandlerScope.() -> Unit) {
-        settings.gradle.beforeProject {
-            buildscript {
-                configure()
+            buildscript.dependencies.apply {
+                add("classpath", "com.google.code.gson:gson:2.13.2")
             }
         }
     }
