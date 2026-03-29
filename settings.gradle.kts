@@ -11,11 +11,11 @@ pluginManagement {
 }
 
 plugins {
-    id("io.github.diskria.projektor.settings") version "5.+"
+    id("io.github.diskria.projektor.settings") version "6.+"
 }
 
 projekt {
-    version = "1.2.2"
+    version = "1.2.5"
     license = MIT
     publish = setOf(GRADLE_PLUGIN_PORTAL)
 
